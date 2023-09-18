@@ -76,4 +76,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
     implementation "androidx.lifecycle:lifecycle-process:2.6.2"
     kapt "androidx.lifecycle:lifecycle-compiler:2.6.2"
+
+    implementation 'com.facebook.android:audience-network-sdk:6.16.0'
 }

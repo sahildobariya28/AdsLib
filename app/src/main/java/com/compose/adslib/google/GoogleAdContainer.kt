@@ -45,7 +45,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions
 
 
 class GoogleAdContainer : ComponentActivity() {
@@ -57,7 +56,7 @@ class GoogleAdContainer : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            var adType = intent.getStringExtra("AdsType")
+            val adType = intent.getStringExtra("AdsType")
 
             MobileAds.initialize(this) {}
 
@@ -65,29 +64,17 @@ class GoogleAdContainer : ComponentActivity() {
             Column(Modifier.fillMaxSize()) {
 
                 when (adType) {
-                    "Banner" -> {
-                        LoadBanner()
-                    }
+                    "Banner" -> { LoadBanner() }
 
-                    "Interstitial" -> {
-                        LoadInterstitial()
-                    }
+                    "Interstitial" -> { LoadInterstitial() }
 
-                    "Native" -> {
-                        LoadNative()
-                    }
+                    "Native" -> { LoadNative() }
 
-                    "Rewarded" -> {
-                        LoadRewarded()
-                    }
+                    "Rewarded" -> { LoadRewarded() }
 
-                    "Open Ad" -> {
+                    "Open Ad" -> {}
 
-                    }
-
-                    else -> {
-
-                    }
+                    else -> { LoadBanner() }
                 }
 
             }
@@ -189,7 +176,7 @@ class GoogleAdContainer : ComponentActivity() {
             }
             if (isClick) {
                 isLoading = true
-                var adRequest = AdRequest.Builder().build()
+                val adRequest = AdRequest.Builder().build()
 
                 InterstitialAd.load(
                     this@GoogleAdContainer,
@@ -339,7 +326,7 @@ class GoogleAdContainer : ComponentActivity() {
             if (isClick) {
                 isLoading = true
 
-                var adRequest = AdRequest.Builder().build()
+                val adRequest = AdRequest.Builder().build()
                 RewardedAd.load(this@GoogleAdContainer,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         rewardedAd = null
@@ -347,13 +334,16 @@ class GoogleAdContainer : ComponentActivity() {
 
                     override fun onAdLoaded(ad: RewardedAd) {
                         rewardedAd = ad
-                        rewardedAd?.let { ad ->
-                            ad.show(this@GoogleAdContainer, OnUserEarnedRewardListener { rewardItem ->
+                        rewardedAd?.let { rewardAd ->
+                            rewardAd.show(this@GoogleAdContainer) { rewardItem ->
                                 // Handle the reward.
                                 val rewardAmount = rewardItem.amount
                                 val rewardType = rewardItem.type
-                                Log.d("djjkdsjf", "User earned the reward.")
-                            })
+                                Log.d(
+                                    "djjkdsjf",
+                                    "User earned the reward. amount: $rewardAmount, type: $rewardType"
+                                )
+                            }
                         } ?: run {
                             Log.d("djjkdsjf", "The rewarded ad wasn't ready yet.")
                         }
